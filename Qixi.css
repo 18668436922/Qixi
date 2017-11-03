@@ -49,6 +49,9 @@ button {
 	-webkit-animation-play-state:paused;
 	-moz-animation-play-state:paused;
 }
+.boyOriginal {
+	background-position: -150px 0px;
+}
 .slowWalk {
 	/* 填入动画样式规则 */
 	/* 规定 @keyframes 动画的名称 */
@@ -108,7 +111,7 @@ button {
 	-webkit-animation-iteration-count:infinite;
 	-webkit-animation-timing-function:step-start;
 
-	-moz-animation-name: Flower;
+	-moz-animation-name: Flower-slow;
 	-moz-animation-duration:950ms;
 	-moz-animation-iteration-count:infinite;
 	-moz-animation-timing-function:step-start;
@@ -134,18 +137,79 @@ button {
 
 @-moz-keyframes Flower-slow {
 	0% {
-		background-position: -453px 0px;
+		background-position: -453px -0px;
 	}
 	25% {
-		background-position: -904px 0px;
+		background-position: -904px -0px;
 	}
 	50% {
-		background-position: -451px 0px;
+		background-position: -451px -0px;
 	}
 	75% {
-		background-position: -753px 0px;
+		background-position: -753px -0px;
 	}
 	100% {
-		background-position: -300px 0px;
+		background-position: -300px -0px;
+	}
+}
+/*男孩转身*/
+.boy-rotate {
+    -webkit-animation-name: boy-rotate;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-fill-mode: forwards;
+	-webkit-animation-timing-function: step-start;
+	-webkit-animation-iteration-count: 1;
+
+	-moz-animation-name: boy-rotate;
+	-moz-animation-duration: 1s;
+	-moz-animation-fill-mode: forwards;
+	-moz-animation-timing-function: step-start;
+	-moz-animation-iteration-count: 1;
+
+}
+@-webkit-keyframes boy-rotate {
+	0% {
+		background-position: -603px 0px;
+	}
+	16.7% {
+		background-position: -150px 0px;
+	}
+	33.4% {
+		background-position: -453px -291px;
+	}
+	50.1% {
+		background-position: 0px 0px;
+	}
+	66.8% {
+		background-position: -903px -291px;
+	}
+	83.5% {
+		background-position: -753px -291px;
+	}
+	100% {
+		background-position: -603px -291px;
+	}
+}
+@-moz-keyframes boy-rotate {
+	0% {
+		background-position: -603px 0px;
+	}
+	16.7% {
+		background-position: -150px 0px;
+	}
+	33.4% {
+		background-position: -453px -291px;
+	}
+	50.1% {
+		background-position: 0px 0px;
+	}
+	66.8% {
+		background-position: -903px -291px;
+	}
+	83.5% {
+		background-position: -753px -291px;
+	}
+	100% {
+		background-position: -603px -291px;
 	}
 }

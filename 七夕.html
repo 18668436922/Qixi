@@ -79,19 +79,113 @@
 				</ul>
 			</li>
 		</ul>
+		<!-- 飘花 -->
+		<div id="snowflake"></div>
 		<div id="boy" class="charecter"></div>
 		<div class="button">
-			<button>开门</button>
-			<button>关门</button>
+			<button>播放音乐</button>
 			
 		</div>
 	</div>
 	<script type="text/javascript">
 		$(function(){
+			var snowflakeURL = [
+			    'images/snowflake/snowflake1.png',
+			    'images/snowflake/snowflake2.png',
+			    'images/snowflake/snowflake3.png',
+			    'images/snowflake/snowflake4.png',
+			    'images/snowflake/snowflake5.png',
+			    'images/snowflake/snowflake6.png'
+			]
+			//=============
+			// 飘雪花
+			//=============
+			function snowflake(){
+				//雪花容器
+				var $flakeContainer = $('#snowflake');
+				// 随机6张图片
+				function getImagesName(){
+					return snowflakeURL[[Math.floor(Math.random()*6)]];
+				}
+				//创建一个雪花元素
+				function createSnowBox(){
+					var url = getImagesName();
+					return $('<div class="snowbox" />').css({
+						'width':41,
+						'height':41,
+						'position':'absolute',
+						'backgroundSize':'cover',
+						'zIndex':10000,
+						'top':'-41px',
+						'backgroundImage':'url(' + url + ')'
+					}).addClass('snowRoll');
+				}
+				//开始飘花
+				setInterval(function(){
+					//运动的轨迹
+					var startPositionLeft = Math.random() * visualWidth-100,
+					startOpacity = 1,
+					endPositionTop = visualHeight-40,
+					endPositionLeft = startPositionLeft-100 + Math.random() * 500,
+					duration = visualHeight * 10 + Math.random() * 5000;
+					//随机透明度不小于0.5
+					var randomStart = Math.random();
+					randomStart = randomStart < 0.5 ?
+					startOpacity : randomStart;
+					//创建一个雪花
+					var $flake = createSnowBox();
+					//设计起点位置
+					$flake.css({
+						left: startPositionLeft,
+						opacity: randomStart
+					});
+					//加入到容器
+					$flakeContainer.append($flake);
+					//开始执行动画
+					$flake.transition({
+						top: endPositionTop,
+						left: endPositionLeft,
+						opacity: 0.7
+					},duration,'ease-out',function(){
+						//结束后删除
+						$(this).remove()
+					});
+				},200)
+			};
+			// 音乐配置
+			var audioConfig = {
+				enable :true, //是否开启音乐
+				playURL: 'music/happy.wav', // 正常播放地址
+				cycleURL: 'music/circulation.wav' //正常循环播放地址
+			};
+			//===================
+			// 背景音乐
+			//===================
+			function Html5Audio(url,isloop){
+				var audio = new Audio(url);
+				audio.autoPlay = true;
+				audio.loop = isloop || false;
+				audio.play();
+				return {
+					end: function(callback){
+						audio.addEventListener('ended',function(){
+							callback();
+						},false);
+					}
+				};
+			};
+
+			$('button:first').click(function(){
+				var audio1 = Html5Audio(audioConfig.playURL);
+				audio1.end(function(){
+					Html5Audio(audioConfig.cycleURL,true);
+				});
+			});
 			
 			var container = $('#content');
 			var swipe = Swipe(container);
 			var visualWidth = container.width();
+			var visualHeight = container.height();
 
 			//页面滚动到指定位置。
 			function scrollTo(time,proportionX){
@@ -174,19 +268,20 @@
 			// 	});
 			// };
 			// 获取数据
-    var getValue = function(className) {  //获取目标class的宽高
-    	var $elem = $(className);
-    	//走路的路线坐标
-    	return {
-    		height:$elem.height(),
-    		top:$elem.position().top
-    	};
-    };
+			var getValue = function(className) {  //获取目标class的宽高
+		    	var $elem = $(className);
+		    	//走路的路线坐标
+		    	return {
+		    		height:$elem.height(),
+		    		top:$elem.position().top
+		    	};
+		    };
 
 			var bridgeY = function() {
 				var data = getValue('.c_background_middle');
 				return data.top;
 			}();
+		    
 
 			var girl = {
 				elem: $('.girl'),
@@ -198,16 +293,56 @@
 						left: visualWidth / 2,
 						top: bridgeY -this.getHeight()
 					});
+				},
+				// 转身动作
+				rotate : function(){
+					this.elem.addClass('girl-rotate');
+				},
+				getOffset : function(){
+					return this.elem.offset();
+				},
+				getWidth : function (){
+					return this.elem.width();
 				}
 			};
 			// 修正小女孩的位置
 			 girl.setOffset();
 
-			
+			 //====================
+			 // 小孩走路
+			 //====================
+			 var boy = Boywalk();
 
-			// $('button:first').click(startRun);
+			 boy.setFlowerWalk();
+
+			 //开始
+  //           $('button:first').click(function(){
+  //           	//第一次走到桥底边left,top
+  //           	boy.walkTo(2000,0.15)
+  //           	.then(function(){
+  //           		//第二次走到桥上left,top
+  //           	return boy.walkTo(1500,0.25,(bridgeY-girl.getHeight())/visualHeight);
+  //           	})
+  //           	.then(function(){
+  //           		//实际走路的比例
+  //           		var proportionX = (girl.getOffset().left - boy.getWidth() + girl.getWidth() / 5) / visualWidth;
+  //           		//第三次上桥直走到女孩面前
+  //           		return boy.walkTo(1500,proportionX);
+  //           	})
+  //           	.then(function(){
+  //           		//图片原地还原停止状态
+  //           		boy.resetOriginal();
+  //           	})
+  //           	.then(function(){
+  //           		//增加转身动作
+  //           		setTimeout(function(){
+  //           			girl.rotate();
+  //           			boy.rotate();
+  //           		},1000);
+  //           	});
+  //           });
 			
-		});
+		 });
 		
 	</script>
 	<script type="text/javascript" src="Swipe.js"></script>

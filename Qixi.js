@@ -1,3 +1,12 @@
+    //动画结束
+    var animationEnd = (function(){
+    	var explorer = navigator.userAgent;
+    	if(~explorer.indexOf('WebKit')){
+    		return 'webkitAnimationEnd';
+    	}
+    	return 'animationEnd';
+    })();
+
     // 灯光动画
     //================================
     var lamp = {
@@ -55,7 +64,6 @@
     var visualWidth = container.width(); // 获取容器的宽度
     var visualHeight = container.height(); // 获取容器的高度
     
-    // 获取数据
     var getValue = function(className) {  //获取目标class的宽高
     	var $elem = $(className);
     	//走路的路线坐标
@@ -64,6 +72,7 @@
     		top:$elem.position().top
     	};
     };
+
     // 路的Y轴
     var pathY = function(){  // 定义目标在页面Y轴的位置。
     	var data = getValue(".a_background_middle");
@@ -175,6 +184,7 @@
     	},1000);
     	return defer;
     };
+
     return {
         //开始走路
         walkTo : function(time,proportionX,proportionY){
@@ -196,6 +206,30 @@
         },
         setColor : function(value){
             $boy.css('background-color',value)
+        },
+        getWidth : function() {
+        	return $boy.width();
+        },
+        // 复位初始状态
+        resetOriginal : function (){
+        	this.stopWalk();
+        	//恢复图片
+        	$boy.removeClass('slowWalk slowFlower').addClass('boyOriginal');
+        },
+        // 转身动作
+        rotate : function(callback) {
+        	restoreWalk();
+        	$boy.addClass('boy-rotate');
+        	// 监听转身完毕
+        	if(callback){
+        		$boy.on(animationEnd,function(){
+        			callback();
+        			$(this).off();
+        		})
+        	}
+        },
+        setFlowerWalk : function(){
+        	$boy.addClass('slowFlower');
         },
         takeFlower : function(){
         	return takeFlower();
