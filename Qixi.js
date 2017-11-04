@@ -1,12 +1,3 @@
-    //动画结束
-    var animationEnd = (function(){
-    	var explorer = navigator.userAgent;
-    	if(~explorer.indexOf('WebKit')){
-    		return 'webkitAnimationEnd';
-    	}
-    	return 'animationEnd';
-    })();
-
     // 灯光动画
     //================================
     var lamp = {
@@ -85,7 +76,7 @@
     //路的中间位置减去小孩的高度，25 是一个修正值
     $boy.css({
     	top:pathY - boyHeight + 25 
-    });
+    })
     // =======================
     //   动画处理
     // =======================
